@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Adobe Analytics digitalData Demo</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- digitalData Data Layer -->
+  <script>
+    window.digitalData = {
+      page: {
+        pageInfo: {
+          pageName: "Demo Site: Home",
+          siteSection: "Demo"
+        }
+      },
+      events: []
+    };
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Demo Website</h1>
+    <nav>
+      <a href="#home" class="track-link">Home</a>
+      <a href="#about" class="track-link">About</a>
+      <a href="#contact" class="track-link">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <section id="home">
+      <h2>Welcome</h2>
+      <p>This demo site uses the <strong>digitalData</strong> data layer.</p>
+
+      <!-- Body links (2–3 links total on page outside nav/footer) -->
+      <a href="https://example.com" target="_blank" class="track-link">
+        External Link
+      </a>
+      <br><br>
+      <a href="#form" class="track-link">
+        Jump to Form
+      </a>
+    </section>
+
+    <!-- Video Section -->
+    <section>
+      <h2>Demo Video</h2>
+      <video id="demoVideo" width="600" controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        Your browser does not support video.
+      </video>
+    </section>
+
+    <!-- Form Section -->
+    <section id="form">
+      <h2>Contact Form</h2>
+      <form id="contactForm">
+        <label>
+          Name:
+          <input type="text" name="name" required>
+        </label>
+
+        <label>
+          Email:
+          <input type="email" name="email" required>
+        </label>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <nav>
+      <a href="#privacy" class="track-link">Privacy</a>
+      <a href="#terms" class="track-link">Terms</a>
+      <a href="#support" class="track-link">Support</a>
+    </nav>
+    <p>© 2026 Demo Company</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+header, footer {
+  background: #1f1f1f;
+  color: #fff;
+  padding: 15px;
+}
+
+nav a {
+  color: #fff;
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+main {
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+/*********************************
+ * Link Click Tracking
+ *********************************/
+document.querySelectorAll(".track-link").forEach(link => {
+  link.addEventListener("click", function () {
+    digitalData.events.push({
+      eventName: "linkClick",
+      link: {
+        linkText: this.textContent.trim(),
+        linkURL: this.href
+      }
+    });
+
+    console.log("Link Click:", digitalData.events);
+  });
+});
+
+/*********************************
+ * Form Submit Tracking
+ *********************************/
+document.getElementById("contactForm").addEventListener("submit", function () {
+  digitalData.events.push({
+    eventName: "formSubmit",
+    form: {
+      formName: "Contact Form"
+    }
+  });
+
+  console.log("Form Submit:", digitalData.events);
+});
+
+/*********************************
+ * Video Milestone Tracking
+ *********************************/
+const video = document.getElementById("demoVideo");
+const milestones = [25, 50, 75, 100];
+let trackedMilestones = [];
+
+video.addEventListener("timeupdate", () => {
+  if (!video.duration) return;
+
+  const percentWatched = Math.floor(
+    (video.currentTime / video.duration) * 100
+  );
+
+  milestones.forEach(milestone => {
+    if (
+      percentWatched >= milestone &&
+      !trackedMilestones.includes(milestone)
+    ) {
+      trackedMilestones.push(milestone);
+
+      digitalData.events.push({
+        eventName: "videoMilestone",
+        video: {
+          videoName: "Demo Video",
+          milestone: milestone
+        }
+      });
+
+      console.log("Video Milestone:", milestone);
+    }
+  });
+});
+
