@@ -2,189 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Adobe Analytics digitalData Demo</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Digital DataLayer Demo</title>
 
-  <!-- digitalData Data Layer -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    header {
+      background: #1f2937;
+      padding: 15px;
+      text-align: center;
+    }
+
+    header a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+
+    form {
+      max-width: 400px;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    footer {
+      background: #111827;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
+    }
+
+    footer a {
+      color: #d1d5db;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
+
   <script>
+    // ---------------------------
+    // DIGITAL DATA LAYER
+    // ---------------------------
     window.digitalData = {
       page: {
         pageInfo: {
-          pageName: "Demo Site: Home",
-          siteSection: "Demo"
+          pageName: "Home Page",
+          siteSection: "Demo Site"
         }
       },
-      events: []
+      header: {
+        link: {}
+      },
+      footer: {
+        link: {}
+      },
+      form: {}
     };
-  </script>
-</head>
-<body>
 
-  <!-- Header -->
-  <header>
-    <h1>Demo Website</h1>
-    <nav>
-      <a href="#home" class="track-link">Home</a>
-      <a href="#about" class="track-link">About</a>
-      <a href="#contact" class="track-link">Contact</a>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main>
-
-    <section id="home">
-      <h2>Welcome</h2>
-      <p>This demo site uses the <strong>digitalData</strong> data layer.</p>
-
-      <!-- Body links (2–3 links total on page outside nav/footer) -->
-      <a href="https://example.com" target="_blank" class="track-link">
-        External Link
-      </a>
-      <br><br>
-      <a href="#form" class="track-link">
-        Jump to Form
-      </a>
-    </section>
-
-    <!-- Video Section -->
-    <section>
-      <h2>Demo Video</h2>
-      <video id="demoVideo" width="600" controls>
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-        Your browser does not support video.
-      </video>
-    </section>
-
-    <!-- Form Section -->
-    <section id="form">
-      <h2>Contact Form</h2>
-      <form id="contactForm">
-        <label>
-          Name:
-          <input type="text" name="name" required>
-        </label>
-
-        <label>
-          Email:
-          <input type="email" name="email" required>
-        </label>
-
-        <button type="submit">Submit</button>
-      </form>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <nav>
-      <a href="#privacy" class="track-link">Privacy</a>
-      <a href="#terms" class="track-link">Terms</a>
-      <a href="#support" class="track-link">Support</a>
-    </nav>
-    <p>© 2026 Demo Company</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-}
-
-header, footer {
-  background: #1f1f1f;
-  color: #fff;
-  padding: 15px;
-}
-
-nav a {
-  color: #fff;
-  margin-right: 15px;
-  text-decoration: none;
-}
-
-main {
-  padding: 20px;
-}
-
-section {
-  margin-bottom: 40px;
-}
-
-form label {
-  display: block;
-  margin-bottom: 12px;
-}
-
-button {
-  padding: 8px 14px;
-  cursor: pointer;
-}
-/*********************************
- * Link Click Tracking
- *********************************/
-document.querySelectorAll(".track-link").forEach(link => {
-  link.addEventListener("click", function () {
-    digitalData.events.push({
-      eventName: "linkClick",
-      link: {
-        linkText: this.textContent.trim(),
-        linkURL: this.href
-      }
+    // ---------------------------
+    // PAGE LOAD CAPTURE
+    // ---------------------------
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("Page Loaded:", digitalData.page.pageInfo);
     });
 
-    console.log("Link Click:", digitalData.events);
-  });
-});
+    // ---------------------------
+    // HEADER LINK TRACKING
+    // ---------------------------
+    function trackHeaderClick(name) {
+      digitalData.header.link = {
+        linkName: name,
+        timestamp: new Date().toISOString()
+      };
 
-/*********************************
- * Form Submit Tracking
- *********************************/
-document.getElementById("contactForm").addEventListener("submit", function () {
-  digitalData.events.push({
-    eventName: "formSubmit",
-    form: {
-      formName: "Contact Form"
+      console.log("Header Click:", digitalData.header.link);
     }
-  });
 
-  console.log("Form Submit:", digitalData.events);
-});
+    // ---------------------------
+    // FOOTER LINK TRACKING
+    // ---------------------------
+    function trackFooterClick(name) {
+      digitalData.footer.link = {
+        linkName: name,
+        timestamp: new Date().toISOString()
+      };
 
-/*********************************
- * Video Milestone Tracking
- *********************************/
-const video = document.getElementById("demoVideo");
-const milestones = [25, 50, 75, 100];
-let trackedMilestones = [];
-
-video.addEventListener("timeupdate", () => {
-  if (!video.duration) return;
-
-  const percentWatched = Math.floor(
-    (video.currentTime / video.duration) * 100
-  );
-
-  milestones.forEach(milestone => {
-    if (
-      percentWatched >= milestone &&
-      !trackedMilestones.includes(milestone)
-    ) {
-      trackedMilestones.push(milestone);
-
-      digitalData.events.push({
-        eventName: "videoMilestone",
-        video: {
-          videoName: "Demo Video",
-          milestone: milestone
-        }
-      });
-
-      console.log("Video Milestone:", milestone);
+      console.log("Footer Click:", digitalData.footer.link);
     }
-  });
-});
 
+    // ---------------------------
+    // FORM SUBMIT TRACKING
+    // ---------------------------
+    function trackFormSubmit(event) {
+      event.preventDefault();
+
+      digitalData.form = {
+        formName: "Contact Form",
+        submitButton: "Submit",
+        timestamp: new Date().toISOString()
+      };
+
+      console.log("Form Submitted:", digitalData.form);
+
+      alert("Form submitted! Check console for digitalData.");
+    }
+  </script>
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="#" onclick="trackHeaderClick('Home')">Home</a>
+    <a href="#" onclick="trackHeaderClick('About')">About</a>
+    <a href="#" onclick="trackHeaderClick('Services')">Services</a>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <h2>Contact Us</h2>
+
+    <form onsubmit="trackFormSubmit(event)">
+      <label for="name">Name</label>
+      <input type="text" id="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+
+      <label for="message">Message</label>
+      <input type="text" id="message" required>
+
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" onclick="trackFooterClick('Privacy Policy')">Privacy Policy</a>
+    <a href="#" onclick="trackFooterClick('Terms of Use')">Terms of Use</a>
+  </footer>
+
+</body>
+</html>
