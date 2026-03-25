@@ -1,168 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Digital DataLayer Demo</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sample Page</title>
+  
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-    }
-
-    header {
-      background: #1f2937;
-      padding: 15px;
+      background-color: #f5f5f5;
       text-align: center;
+      padding: 50px;
     }
-
-    header a {
+    h1 {
+      color: #333;
+      margin-bottom: 40px;
+    }
+    button {
+      background-color: #007BFF;
       color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
+      border: none;
+      padding: 15px 25px;
+      font-size: 16px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
     }
-
-    main {
-      padding: 20px;
-      text-align: center;
-    }
-
-    form {
-      max-width: 400px;
-      margin: auto;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      text-align: left;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-
-    footer {
-      background: #111827;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 30px;
-    }
-
-    footer a {
-      color: #d1d5db;
-      margin: 0 10px;
-      text-decoration: none;
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
-
-  <script>
-    // ---------------------------
-    // DIGITAL DATA LAYER
-    // ---------------------------
-    window.digitalData = {
-      page: {
-        pageInfo: {
-          pageName: "Home Page",
-          siteSection: "Demo Site"
-        }
-      },
-      header: {
-        link: {}
-      },
-      footer: {
-        link: {}
-      },
-      form: {}
-    };
-
-    // ---------------------------
-    // PAGE LOAD CAPTURE
-    // ---------------------------
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log("Page Loaded:", digitalData.page.pageInfo);
-    });
-
-    // ---------------------------
-    // HEADER LINK TRACKING
-    // ---------------------------
-    function trackHeaderClick(name) {
-      digitalData.header.link = {
-        linkName: name,
-        timestamp: new Date().toISOString()
-      };
-
-      console.log("Header Click:", digitalData.header.link);
-    }
-
-    // ---------------------------
-    // FOOTER LINK TRACKING
-    // ---------------------------
-    function trackFooterClick(name) {
-      digitalData.footer.link = {
-        linkName: name,
-        timestamp: new Date().toISOString()
-      };
-
-      console.log("Footer Click:", digitalData.footer.link);
-    }
-
-    // ---------------------------
-    // FORM SUBMIT TRACKING
-    // ---------------------------
-    function trackFormSubmit(event) {
-      event.preventDefault();
-
-      digitalData.form = {
-        formName: "Contact Form",
-        submitButton: "Submit",
-        timestamp: new Date().toISOString()
-      };
-
-      console.log("Form Submitted:", digitalData.form);
-
-      alert("Form submitted! Check console for digitalData.");
-    }
-  </script>
-
 </head>
 
 <body>
+  <h1>Example Page with Two Buttons</h1>
 
-  <!-- HEADER -->
-  <header>
-    <a href="#" onclick="trackHeaderClick('Home')">Home</a>
-    <a href="#" onclick="trackHeaderClick('About')">About</a>
-    <a href="#" onclick="trackHeaderClick('Services')">Services</a>
-  </header>
+  <button id="button1">Button 1</button>
+  <button id="button2">Button 2</button>
 
-  <!-- MAIN -->
-  <main>
-    <h2>Contact Us</h2>
+  <script>
+    // Digital Data Layer
+    window.digitalData = {
+      page: {
+        pageName: "Sample Page",
+        pageURL: window.location.href,
+        siteSection: "Examples",
+        pageTitle: document.title
+      }
+    };
 
-    <form onsubmit="trackFormSubmit(event)">
-      <label for="name">Name</label>
-      <input type="text" id="name" required>
+    // Example button handlers
+    document.getElementById("button1").addEventListener("click", function() {
+      alert("Button 1 clicked!");
+    });
 
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
+    document.getElementById("button2").addEventListener("click", function() {
+      alert("Button 2 clicked!");
+    });
 
-      <label for="message">Message</label>
-      <input type="text" id="message" required>
-
-      <button type="submit">Submit</button>
-    </form>
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <a href="#" onclick="trackFooterClick('Privacy Policy')">Privacy Policy</a>
-    <a href="#" onclick="trackFooterClick('Terms of Use')">Terms of Use</a>
-  </footer>
-
+    // Optional: log digitalData to console for visibility
+    console.log("digitalData:", window.digitalData);
+  </script>
 </body>
 </html>
